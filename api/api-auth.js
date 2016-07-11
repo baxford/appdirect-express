@@ -77,7 +77,8 @@ module.exports = function(options) {
           public: config.oauth_key,
           secret: config.oauth_secret
       },
-      signature_method: config.oauth_signature
+      signature_method: config.oauth_signature,
+      force_https: config.force_https
   });
   return {
     requireAuth: requireAuth,
