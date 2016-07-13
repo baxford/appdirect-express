@@ -131,7 +131,7 @@ function getEventData(req, res, next) {
   var data = {
     url: req.query.eventUrl,
     method: 'GET'
-  }
+  };
   request({
     url: data.url,
     method: data.method,

@@ -168,7 +168,7 @@ OAuth.prototype.getBaseUrl = function(urlStr) {
   var baseUrl = proto + '//';
   baseUrl += parsedUrl.hostname;
   baseUrl += parsedUrl.pathname;
-  console.log('BASEURL: ' + baseUrl);
+  //console.log('BASEURL: ' + baseUrl);
   return baseUrl;
 };
 

@@ -1,7 +1,7 @@
 var express = require('express');
 var path = require('path');
 var qs = require('querystring');
-var apiResponse = require('./api/api-response')
+
 var ApiHelpers = require('./api/api-helpers.js');
 var ApiAuth = require('./api/api-auth.js');
 
@@ -46,7 +46,9 @@ module.exports = function(app, options) {
   /**
    * Route middleware for response helpers
    */
+  var apiResponse = require('./api/api-response')(config);
   baseApi.use('/', apiResponse);
+  app.use('/', apiResponse);
   /**
    * Route middleware to validate oauth signature
    */

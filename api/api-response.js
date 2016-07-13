@@ -13,9 +13,12 @@
  */
 
 var js2xmlparser = require('js2xmlparser');
+var ApiAuth = require('./api-auth.js');
 
-module.exports = function(req, res, next) {
-  var errorCodes = {
+module.exports = function(config) {
+  var apiAuth = ApiAuth(config);
+  return function (req, res, next) {
+    var errorCodes = {
       USER_ALREADY_EXISTS: 'The specified user already exists.',
       USER_NOT_FOUND: 'The specified user could not be found.',
       ACCOUNT_NOT_FOUND: 'The specified account could not be found',
@@ -27,32 +30,36 @@ module.exports = function(req, res, next) {
       UNKNOWN_ERROR: 'An unknown server error occured',
       PENDING: 'The requested action cannot be completed during provisioning.'
     };
-  res.apiError = function(errorCode, message) {
-    return {
-      success: false,
-      errorCode: errorCode,
-      message: (message ? message : errorCodes[errorCode])
-    }
-  };
-  res.apiSuccess = function(message) {
-    return {
-      success: true,
-      errorCode: '',
-      message: message
-    }
-  };
-  res.sendApiError = function(errorCode, message) {
-    return res.sendApiResponse(res.apiError(errorCode, message));
-  };
-  res.sendApiSuccess = function(message) {
-    return res.sendApiResponse(res.apiSuccess(message));
-  };
-  res.sendApiResponse = function(data) {
-    if(!res.headersSent) {
-      res.set('Content-Type', 'application/xml');
-      res.send(js2xmlparser("result", data));
-    }
-  }
+    res.apiError = function (errorCode, message) {
+      return {
+        success: false,
+        errorCode: errorCode,
+        message: (message ? message : errorCodes[errorCode])
+      }
+    };
+    res.apiSuccess = function (message) {
+      return {
+        success: true,
+        errorCode: '',
+        message: message
+      }
+    };
+    res.sendApiError = function (errorCode, message) {
+      return res.sendApiResponse(res.apiError(errorCode, message));
+    };
+    res.sendApiSuccess = function (message) {
+      return res.sendApiResponse(res.apiSuccess(message));
+    };
+    res.sendApiResponse = function (data) {
+      if (!res.headersSent) {
+        res.set('Content-Type', 'application/xml');
+        res.send(js2xmlparser("result", data));
+      }
+    };
+    res.authHeaders = function(data) {
+      return apiAuth.getAuth(data);
+    };
 
-  return next();
-}
+    return next();
+  }
+};
